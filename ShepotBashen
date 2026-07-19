@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<title>Шёпот башен — авторская кофейня</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --white:#FFFFFF;
+    --milk:#FDFBF7;
+    --beige:#F5EDE0;
+    --emerald:#0B5E4B;
+    --emerald-deep:#083F33;
+    --emerald-soft:#1E6B5A;
+    --ink:#2B2B28;
+    --ink-soft:#5B5850;
+    --line-beige:#E4D8C3;
+    --line-emerald: rgba(11,94,75,0.25);
+  }
+ 
+  *{box-sizing:border-box; margin:0; padding:0;}
+ 
+  html{scroll-behavior:smooth;}
+ 
+  body{
+    background:var(--white);
+    color:var(--ink);
+    font-family:'Inter', sans-serif;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+ 
+  h1,h2,h3,.serif{
+    font-family:'Cormorant Garamond', serif;
+    font-weight:600;
+    letter-spacing:0.01em;
+  }
+ 
+  a{color:inherit; text-decoration:none;}
+  img{display:block; width:100%; height:100%; object-fit:cover;}
+  button{font-family:inherit; cursor:pointer; border:none;}
+ 
+  .container{
+    max-width:1180px;
+    margin:0 auto;
+    padding:0 32px;
+  }
+ 
+  @media(prefers-reduced-motion: reduce){
+    *{animation-duration:0.01ms !important; transition-duration:0.01ms !important;}
+    .hero-content .eyebrow, .hero-content h1, .hero-content p, .hero-content .hero-actions,
+    header, .gallery-grid figure{
+      opacity:1 !important; transform:none !important; animation-delay:0s !important;
+    }
+  }
+ 
+  /* ---------- Tower motif (signature element) ---------- */
+  .tower-mark{
+    position:absolute;
+    pointer-events:none;
+    opacity:0.07;
+    color:var(--emerald);
+    z-index:0;
+  }
+ 
+  /* ---------- Header ---------- */
+  header{
+    position:fixed;
+    top:0; left:0; right:0;
+    z-index:100;
+    background:rgba(253,251,247,0.72);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+    border-bottom:1px solid transparent;
+    transition:border-color .4s ease, background .4s ease;
+    transform:translateY(-100%);
+    animation:headerDrop .7s cubic-bezier(.2,.7,.2,1) .1s forwards;
+  }
+  @keyframes headerDrop{ to{transform:translateY(0);} }
+  .scroll-progress{
+    position:absolute;
+    left:0; bottom:-1px;
+    height:2px;
+    width:0%;
+    background:var(--emerald);
+    transition:width .1s linear;
+  }
+  header.scrolled{
+    border-bottom-color:var(--line-beige);
+    background:rgba(253,251,247,0.92);
+  }
+  .header-inner{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:20px 32px;
+    max-width:1180px;
+    margin:0 auto;
+  }
+  .logo{
+    font-family:'Cormorant Garamond', serif;
+    font-size:24px;
+    font-weight:600;
+    color:var(--emerald);
+    letter-spacing:0.03em;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .logo svg{width:22px; height:22px; flex-shrink:0; transition:transform .5s cubic-bezier(.3,.6,.3,1.4); transform-origin:bottom center;}
+  .logo:hover svg{transform:rotate(-6deg) scale(1.08);}
+  nav{display:flex; align-items:center; gap:40px;}
+  .nav-links{display:flex; gap:32px;}
+  .nav-links a{
+    font-size:14px;
+    color:var(--ink-soft);
+    font-weight:500;
+    letter-spacing:0.02em;
+    position:relative;
+    padding-bottom:4px;
+  }
+  .nav-links a::after{
+    content:'';
+    position:absolute;
+    left:0; right:100%;
+    bottom:0;
+    height:1px;
+    background:var(--emerald);
+    transition:right .3s ease;
+  }
+  .nav-links a:hover{color:var(--emerald);}
+  .nav-links a:hover::after{right:0;}
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:12px 26px;
+    border-radius:999px;
+    font-size:13.5px;
+    font-weight:600;
+    letter-spacing:0.03em;
+    white-space:nowrap;
+    transition:all .3s ease, transform .15s ease;
+  }
+  .btn:active{transform:scale(0.96);}
+  .btn-primary{
+    background:var(--emerald);
+    color:var(--white);
+  }
+  .btn-primary:hover{background:var(--emerald-deep); transform:translateY(-1px);}
+  .btn-outline{
+    background:transparent;
+    color:var(--emerald);
+    border:1px solid var(--beige);
+  }
+  .btn-outline:hover{border-color:var(--emerald); background:rgba(11,94,75,0.04);}
+  .btn-header{padding:11px 24px; font-size:13px;}
+  .burger{display:none; background:none; width:26px; height:20px; position:relative;}
+  .burger span{position:absolute; left:0; width:100%; height:1.5px; background:var(--emerald); transition:.3s;}
+  .burger span:nth-child(1){top:0;}
+  .burger span:nth-child(2){top:9px;}
+  .burger span:nth-child(3){top:18px;}
+ 
+  /* ---------- Hero ---------- */
+  .hero{
+    position:relative;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:
+      radial-gradient(ellipse 90% 60% at 50% 0%, rgba(11,94,75,0.06), transparent 60%),
+      linear-gradient(180deg, #FBF8F2 0%, #F5EDE0 60%, #EFE4D0 100%);
+    overflow:hidden;
+    padding-top:80px;
+  }
+  .hero-towers{
+    position:absolute;
+    inset:0;
+    display:flex;
+    align-items:flex-end;
+    justify-content:center;
+    opacity:1;
+    will-change:transform;
+  }
+  .hero-towers svg{
+    animation:towersFloat 10s ease-in-out infinite;
+  }
+  @keyframes towersFloat{
+    0%, 100%{transform:translateY(0);}
+    50%{transform:translateY(-8px);}
+  }
+  .hero-light{
+    position:absolute;
+    top:-10%; left:50%;
+    transform:translateX(-50%);
+    width:900px; height:900px;
+    background:radial-gradient(circle, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0) 65%);
+    pointer-events:none;
+    animation:lightBreathe 7s ease-in-out infinite;
+  }
+  @keyframes lightBreathe{
+    0%, 100%{opacity:1; transform:translateX(-50%) scale(1);}
+    50%{opacity:0.75; transform:translateX(-50%) scale(1.06);}
+  }
+  .hero-content{
+    position:relative;
+    z-index:3;
+    text-align:center;
+    max-width:760px;
+    padding:56px 48px;
+    background:rgba(253,251,247,0.72);
+    backdrop-filter:blur(6px);
+    border:1px solid rgba(255,255,255,0.5);
+    border-radius:4px;
+  }
+  .hero-content .eyebrow,
+  .hero-content h1,
+  .hero-content p,
+  .hero-content .hero-actions{
+    opacity:0;
+    transform:translateY(16px);
+    animation:heroRise .9s cubic-bezier(.2,.7,.2,1) forwards;
+  }
+  .hero-content .eyebrow{animation-delay:.15s;}
+  .hero-content h1{animation-delay:.32s;}
+  .hero-content p{animation-delay:.5s;}
+  .hero-content .hero-actions{animation-delay:.68s;}
+  @keyframes heroRise{
+    to{opacity:1; transform:translateY(0);}
+  }
+  .eyebrow{
+    font-size:12px;
+    letter-spacing:0.28em;
+    text-transform:uppercase;
+    color:var(--emerald-soft);
+    font-weight:600;
+    margin-bottom:22px;
+    display:inline-block;
+  }
+  .hero h1{
+    font-size:clamp(34px, 5.2vw, 58px);
+    line-height:1.15;
+    color:var(--emerald-deep);
+    margin-bottom:22px;
+  }
+  .hero p{
+    font-size:16px;
+    color:var(--ink-soft);
+    max-width:480px;
+    margin:0 auto 36px;
+    line-height:1.7;
+  }
+  .hero-actions{
+    display:flex;
+    gap:16px;
+    justify-content:center;
+    flex-wrap:wrap;
+  }
+  .scroll-cue{
+    position:absolute;
+    bottom:36px; left:50%;
+    transform:translateX(-50%);
+    z-index:3;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:10px;
+    color:var(--emerald-soft);
+    font-size:11px;
+    letter-spacing:0.2em;
+    text-transform:uppercase;
+    opacity:0.7;
+  }
+  .scroll-cue .line{width:1px; height:34px; background:var(--emerald-soft); animation:scrollPulse 2.2s ease-in-out infinite;}
+  @keyframes scrollPulse{0%{transform:scaleY(0.2); transform-origin:top;} 50%{transform:scaleY(1); transform-origin:top;} 51%{transform-origin:bottom;} 100%{transform:scaleY(0.2); transform-origin:bottom;}}
+ 
+  /* ---------- Section shell ---------- */
+  section{position:relative; padding:120px 0;}
+  .section-label{
+    font-size:12px;
+    letter-spacing:0.24em;
+    text-transform:uppercase;
+    color:var(--emerald-soft);
+    font-weight:600;
+    margin-bottom:16px;
+    display:block;
+  }
+  .section-title{
+    font-size:clamp(28px, 3.4vw, 42px);
+    color:var(--emerald-deep);
+    margin-bottom:20px;
+  }
+ 
+  /* ---------- About ---------- */
+  .about{background:var(--white);}
+  .about-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:80px;
+    align-items:center;
+  }
+  .about-text p{
+    color:var(--ink-soft);
+    font-size:16px;
+    line-height:1.85;
+    margin-bottom:20px;
+    max-width:440px;
+  }
+  .divider{
+    width:56px; height:1px;
+    background:var(--emerald);
+    margin:28px 0 32px;
+  }
+  .about-figure{
+    position:relative;
+    border-radius:4px;
+    overflow:hidden;
+    aspect-ratio:4/5;
+    box-shadow:0 40px 80px -30px rgba(43,43,40,0.25);
+  }
+  .about-figure .art-arch{
+    position:absolute; inset:0;
+  }
+ 
+  /* ---------- Menu ---------- */
+  .menu{background:var(--beige);}
+  .menu-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:28px;
+    margin-top:56px;
+  }
+  .menu-card{
+    background:var(--milk);
+    border:1px solid rgba(11,94,75,0.14);
+    border-radius:6px;
+    padding:34px 28px;
+    transition:transform .35s ease, box-shadow .35s ease, border-color .35s ease;
+    position:relative;
+  }
+  .menu-card:hover{
+    transform:translateY(-6px);
+    box-shadow:0 26px 50px -22px rgba(11,94,75,0.28);
+    border-color:rgba(11,94,75,0.3);
+  }
+  .bean-icon-wrap{position:relative; width:26px; height:34px; margin-bottom:18px;}
+  .bean-icon{width:26px; height:26px; color:var(--emerald); position:absolute; bottom:0; left:0; transition:transform .4s ease;}
+  .menu-card:hover .bean-icon{transform:translateY(-2px) rotate(-4deg);}
+  .steam{
+    position:absolute;
+    bottom:22px; left:6px;
+    width:2px; height:14px;
+    background:var(--emerald-soft);
+    border-radius:2px;
+    opacity:0;
+    transform-origin:bottom center;
+  }
+  .steam.s2{left:12px; height:11px;}
+  .steam.s3{left:18px; height:14px;}
+  .menu-card:hover .steam{
+    animation:steamRise 1.6s ease-in-out infinite;
+  }
+  .menu-card:hover .steam.s2{animation-delay:.2s;}
+  .menu-card:hover .steam.s3{animation-delay:.4s;}
+  @keyframes steamRise{
+    0%{opacity:0; transform:translateY(0) scaleY(0.6);}
+    30%{opacity:0.55;}
+    100%{opacity:0; transform:translateY(-16px) scaleY(1.3);}
+  }
+  .menu-card h3{
+    font-size:22px;
+    color:var(--emerald);
+    margin-bottom:10px;
+    font-weight:600;
+  }
+  .menu-card p{
+    font-size:14.5px;
+    color:var(--ink-soft);
+    line-height:1.65;
+    margin-bottom:18px;
+    min-height:66px;
+  }
+  .menu-price{
+    font-size:14px;
+    font-weight:600;
+    color:var(--ink);
+    letter-spacing:0.02em;
+  }
+  .menu-cta{text-align:center; margin-top:52px;}
+ 
+  /* ---------- Gallery ---------- */
+  .gallery{background:var(--white);}
+  .gallery-grid{
+    display:grid;
+    grid-template-columns:repeat(6, 1fr);
+    grid-auto-rows:150px;
+    gap:14px;
+    margin-top:56px;
+  }
+  .gallery-grid figure{
+    border-radius:4px;
+    overflow:hidden;
+    position:relative;
+    opacity:0;
+    transform:scale(0.94);
+  }
+  .gallery-grid.in figure{
+    animation:figurePop .65s cubic-bezier(.2,.7,.2,1) forwards;
+  }
+  .gallery-grid.in figure:nth-child(1){animation-delay:.05s;}
+  .gallery-grid.in figure:nth-child(2){animation-delay:.15s;}
+  .gallery-grid.in figure:nth-child(3){animation-delay:.25s;}
+  .gallery-grid.in figure:nth-child(4){animation-delay:.35s;}
+  .gallery-grid.in figure:nth-child(5){animation-delay:.45s;}
+  .gallery-grid.in figure:nth-child(6){animation-delay:.55s;}
+  @keyframes figurePop{
+    to{opacity:1; transform:scale(1);}
+  }
+  .gallery-grid figure svg{
+    transition:transform .6s cubic-bezier(.2,.7,.2,1);
+  }
+  .gallery-grid figure:hover svg{
+    transform:scale(1.08);
+  }
+  .gallery-grid figure:nth-child(1){grid-column:span 3; grid-row:span 2;}
+  .gallery-grid figure:nth-child(2){grid-column:span 3; grid-row:span 1;}
+  .gallery-grid figure:nth-child(3){grid-column:span 2; grid-row:span 1;}
+  .gallery-grid figure:nth-child(4){grid-column:span 3; grid-row:span 1;}
+  .gallery-grid figure:nth-child(5){grid-column:span 2; grid-row:span 2;}
+  .gallery-grid figure:nth-child(6){grid-column:span 4; grid-row:span 1;}
+ 
+  /* ---------- Reviews ---------- */
+  .reviews{background:var(--beige);}
+  .reviews-head{text-align:center; max-width:600px; margin:0 auto;}
+  .reviews-head .section-title{margin-bottom:0;}
+  .slider{
+    margin-top:56px;
+    position:relative;
+    max-width:720px;
+    margin-left:auto; margin-right:auto;
+    min-height:230px;
+  }
+  .slide{
+    display:none;
+    background:var(--milk);
+    border-radius:6px;
+    padding:48px 56px;
+    text-align:center;
+    position:relative;
+    border:1px solid rgba(11,94,75,0.1);
+  }
+  .slide.active{display:block; animation:fadeSlide .6s ease;}
+  @keyframes fadeSlide{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);}}
+  .quote-mark{
+    font-family:'Cormorant Garamond', serif;
+    font-size:64px;
+    color:var(--emerald);
+    opacity:0.28;
+    line-height:1;
+    display:block;
+    margin-bottom:4px;
+  }
+  .slide p{font-size:17px; color:var(--ink); line-height:1.8; margin-bottom:22px; font-style:italic;}
+  .stars{color:var(--emerald); font-size:14px; letter-spacing:3px; margin-bottom:12px;}
+  .stars span{
+    display:inline-block;
+    animation:starTwinkle 2.4s ease-in-out infinite;
+  }
+  @keyframes starTwinkle{
+    0%, 100%{opacity:1; transform:scale(1);}
+    50%{opacity:0.55; transform:scale(0.88);}
+  }
+  .slide-author{font-size:13px; color:var(--ink-soft); font-weight:600; letter-spacing:0.03em;}
+  .slider-dots{display:flex; justify-content:center; gap:10px; margin-top:28px;}
+  .slider-dots button{
+    width:8px; height:8px; border-radius:50%;
+    background:var(--line-beige);
+    transition:background .3s;
+  }
+  .slider-dots button.active{background:var(--emerald);}
+ 
+  /* ---------- Footer ---------- */
+  footer{
+    background:var(--emerald);
+    color:var(--white);
+    position:relative;
+    overflow:hidden;
+  }
+  .footer-top{
+    padding:64px 0 48px;
+    border-bottom:1px solid rgba(255,255,255,0.18);
+  }
+  .footer-top .container{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:40px;
+    flex-wrap:wrap;
+  }
+  .footer-top h3{
+    font-size:26px;
+    margin-bottom:8px;
+    font-weight:600;
+  }
+  .footer-top p{font-size:14px; color:rgba(255,255,255,0.75);}
+  .subscribe-form{display:flex; gap:0; max-width:380px; width:100%;}
+  .subscribe-form input{
+    flex:1;
+    padding:14px 18px;
+    border:none;
+    background:var(--white);
+    color:var(--ink);
+    font-size:14px;
+    border-radius:999px 0 0 999px;
+    font-family:inherit;
+  }
+  .subscribe-form input::placeholder{color:var(--ink-soft);}
+  .subscribe-form button{
+    padding:14px 26px;
+    background:var(--emerald-deep);
+    color:var(--white);
+    border-radius:0 999px 999px 0;
+    font-size:13px;
+    font-weight:600;
+    letter-spacing:0.02em;
+    transition:background .3s;
+  }
+  .subscribe-form button:hover{background:#062A22;}
+  .footer-main{padding:56px 0 40px;}
+  .footer-grid{
+    display:grid;
+    grid-template-columns:1.4fr 1fr 1fr 1fr;
+    gap:40px;
+  }
+  .footer-logo{
+    font-family:'Cormorant Garamond', serif;
+    font-size:24px;
+    font-weight:600;
+    margin-bottom:14px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .footer-grid p{font-size:14px; color:rgba(255,255,255,0.72); line-height:1.7;}
+  .footer-col h4{
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:0.18em;
+    color:rgba(255,255,255,0.55);
+    margin-bottom:18px;
+    font-weight:600;
+  }
+  .footer-col a, .footer-col li{
+    display:block;
+    font-size:14.5px;
+    color:rgba(255,255,255,0.88);
+    margin-bottom:12px;
+    line-height:1.5;
+    list-style:none;
+  }
+  .socials{display:flex; gap:14px; margin-top:8px;}
+  .socials a{
+    width:36px; height:36px;
+    border:1px solid rgba(255,255,255,0.3);
+    border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    transition:background .3s, border-color .3s;
+  }
+  .socials a:hover{background:rgba(255,255,255,0.12); border-color:rgba(255,255,255,0.6);}
+  .socials svg{width:15px; height:15px;}
+  .footer-bottom{
+    padding:22px 0 30px;
+    border-top:1px solid rgba(255,255,255,0.14);
+    font-size:12.5px;
+    color:rgba(255,255,255,0.55);
+    text-align:center;
+    letter-spacing:0.02em;
+  }
+  .footer-tower-decor{
+    position:absolute;
+    right:-40px; bottom:-30px;
+    width:260px; opacity:0.08;
+    pointer-events:none;
+  }
+ 
+  /* ---------- Subscribe Modal ---------- */
+  .modal-overlay{
+    position:fixed;
+    inset:0;
+    z-index:1000;
+    background:rgba(43,43,40,0.55);
+    backdrop-filter:blur(4px);
+    -webkit-backdrop-filter:blur(4px);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+    opacity:0;
+    visibility:hidden;
+    transition:opacity .4s ease, visibility .4s ease;
+  }
+  .modal-overlay.open{opacity:1; visibility:visible;}
+ 
+  .modal-box{
+    position:relative;
+    width:100%;
+    max-width:420px;
+    background:var(--milk);
+    border:1px solid rgba(11,94,75,0.16);
+    border-radius:6px;
+    padding:52px 40px 40px;
+    text-align:center;
+    overflow:hidden;
+    transform:translateY(18px) scale(0.97);
+    opacity:0;
+    transition:transform .45s cubic-bezier(.2,.7,.3,1), opacity .45s ease;
+    box-shadow:0 50px 90px -30px rgba(8,63,51,0.45);
+  }
+  .modal-overlay.open .modal-box{
+    transform:translateY(0) scale(1);
+    opacity:1;
+  }
+ 
+  .modal-box .tower-mark{
+    top:-30px; right:-24px;
+    opacity:0.06;
+    width:170px; height:auto;
+  }
+ 
+  .modal-close{
+    position:absolute;
+    top:18px; right:18px;
+    width:32px; height:32px;
+    border-radius:50%;
+    background:transparent;
+    border:1px solid var(--line-beige);
+    display:flex; align-items:center; justify-content:center;
+    color:var(--emerald-soft);
+    transition:background .3s, border-color .3s, transform .3s;
+  }
+  .modal-close:hover{background:rgba(11,94,75,0.06); border-color:var(--emerald); transform:rotate(90deg);}
+  .modal-close svg{width:14px; height:14px;}
+ 
+  .modal-icon{
+    width:56px; height:56px;
+    margin:0 auto 22px;
+    border-radius:50%;
+    background:rgba(11,94,75,0.08);
+    display:flex; align-items:center; justify-content:center;
+    color:var(--emerald);
+    position:relative;
+    z-index:1;
+  }
+  .modal-icon svg{width:24px; height:24px;}
+ 
+  .modal-box h3{
+    font-size:26px;
+    color:var(--emerald-deep);
+    margin-bottom:12px;
+    position:relative; z-index:1;
+  }
+  .modal-box .modal-sub{
+    font-size:14.5px;
+    color:var(--ink-soft);
+    line-height:1.7;
+    margin-bottom:28px;
+    position:relative; z-index:1;
+  }
+ 
+  /* state 1: email entry */
+  .modal-step{position:relative; z-index:1;}
+  .modal-step + .modal-step{display:none;}
+ 
+  .modal-field{
+    text-align:left;
+    margin-bottom:18px;
+  }
+  .modal-field label{
+    display:block;
+    font-size:11.5px;
+    text-transform:uppercase;
+    letter-spacing:0.14em;
+    color:var(--emerald-soft);
+    font-weight:600;
+    margin-bottom:8px;
+  }
+  .modal-field input{
+    width:100%;
+    padding:14px 16px;
+    border:1px solid var(--line-beige);
+    border-radius:4px;
+    background:var(--white);
+    color:var(--ink);
+    font-size:14.5px;
+    font-family:inherit;
+    transition:border-color .3s, box-shadow .3s;
+  }
+  .modal-field input::placeholder{color:#B9AF9C;}
+  .modal-field input:focus{
+    outline:none;
+    border-color:var(--emerald);
+    box-shadow:0 0 0 3px rgba(11,94,75,0.12);
+  }
+  .modal-field .field-error{
+    display:none;
+    font-size:12.5px;
+    color:#A6432F;
+    margin-top:7px;
+    letter-spacing:0.01em;
+  }
+  .modal-field.invalid input{border-color:#A6432F;}
+  .modal-field.invalid .field-error{display:block;}
+ 
+  .modal-box .btn{width:100%;}
+ 
+  .modal-divider-line{
+    display:flex; align-items:center; gap:10px;
+    margin:20px 0 4px;
+    color:#B9AF9C;
+    font-size:11px;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+  }
+  .modal-divider-line::before, .modal-divider-line::after{
+    content:''; flex:1; height:1px; background:var(--line-beige);
+  }
+ 
+  /* state 2: success */
+  .modal-success{display:none;}
+  .modal-success.show{display:block; animation:fadeSlide .5s ease;}
+  .modal-success .modal-icon{
+    background:rgba(11,94,75,0.1);
+    animation:successPop .5s cubic-bezier(.2,.8,.3,1.2) both;
+  }
+  @keyframes successPop{
+    0%{transform:scale(0.4); opacity:0;}
+    60%{transform:scale(1.12); opacity:1;}
+    100%{transform:scale(1);}
+  }
+  .modal-success .modal-email{
+    color:var(--emerald);
+    font-weight:600;
+  }
+ 
+  @media(prefers-reduced-motion: reduce){
+    .modal-overlay, .modal-box, .modal-success .modal-icon{animation:none !important; transition:none !important;}
+  }
+ 
+  /* ---------- Reveal on scroll ---------- */
+  .reveal{opacity:0; transform:translateY(24px); transition:opacity .8s ease, transform .8s ease;}
+  .reveal.in{opacity:1; transform:translateY(0);}
+ 
+  /* ---------- Responsive ---------- */
+  @media(max-width:960px){
+    .about-grid{grid-template-columns:1fr; gap:48px;}
+    .about-figure{order:-1;}
+    .menu-grid{grid-template-columns:repeat(2,1fr);}
+    .footer-grid{grid-template-columns:1fr 1fr; row-gap:36px;}
+  }
+  @media(max-width:720px){
+    .nav-links{display:none;}
+    .burger{display:block;}
+    .btn-header{display:none;}
+    .menu-grid{grid-template-columns:1fr;}
+    .gallery-grid{grid-template-columns:repeat(2,1fr); grid-auto-rows:130px;}
+    .gallery-grid figure:nth-child(1),
+    .gallery-grid figure:nth-child(2),
+    .gallery-grid figure:nth-child(3),
+    .gallery-grid figure:nth-child(4),
+    .gallery-grid figure:nth-child(5),
+    .gallery-grid figure:nth-child(6){grid-column:span 1; grid-row:span 1;}
+    .footer-top .container{flex-direction:column; align-items:flex-start;}
+    .footer-grid{grid-template-columns:1fr;}
+    .slide{padding:36px 24px;}
+    section{padding:80px 0;}
+  }
+</style>
+</head>
+<body>
+ 
+<!-- ===================== HEADER ===================== -->
+<header id="siteHeader">
+  <div class="header-inner">
+    <a href="#" class="logo">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M9 21V9L12 3L15 9V21" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>
+        <path d="M6 21V13L4 10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M18 21V13L20 10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+        <line x1="4" y1="21" x2="20" y2="21" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+      </svg>
+      Шёпот башен
+    </a>
+    <nav>
+      <div class="nav-links">
+        <a href="#menu">Меню</a>
+        <a href="#about">Атмосфера</a>
+        <a href="#gallery">Галерея</a>
+        <a href="#reviews">Отзывы</a>
+        <a href="#contacts">Контакты</a>
+      </div>
+      <a href="#contacts" class="btn btn-primary btn-header">Забронировать столик</a>
+      <button class="burger" aria-label="Меню" onclick="document.querySelector('.nav-links').classList.toggle('mobile-open')">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+  </div>
+  <div class="scroll-progress" id="scrollProgress"></div>
+</header>
+ 
+<!-- ===================== HERO ===================== -->
+<section class="hero" id="top">
+  <div class="hero-light"></div>
+  <div class="hero-towers" id="heroTowers"></div>
+ 
+  <div class="hero-content reveal in">
+    <span class="eyebrow">Авторская кофейня</span>
+    <h1>Кофе, рождённый тишиной старых башен</h1>
+    <p>Высокие своды, мягкий дневной свет и зерно, обжаренное так, чтобы звучать тихо — как эхо в каменном коридоре.</p>
+    <div class="hero-actions">
+      <a href="#menu" class="btn btn-primary">Посмотреть меню</a>
+      <a href="#about" class="btn btn-outline">О кофейне</a>
+    </div>
+  </div>
+ 
+  <div class="scroll-cue"><span>Листайте</span><span class="line"></span></div>
+</section>
+ 
+<!-- ===================== ABOUT / ATMOSPHERE ===================== -->
+<section class="about" id="about">
+  <div class="container about-grid">
+    <div class="about-text reveal">
+      <span class="section-label">Атмосфера</span>
+      <h2 class="section-title">Дом для тишины</h2>
+      <div class="divider"></div>
+      <p>Мы строили «Шёпот башен» как место, где время замедляется само собой. Арочные своды над барной стойкой повторяют силуэты старых городских башен — тех, что видели закат тысячи раз и никуда не спешат.</p>
+      <p>Здесь мало лишнего: бархат, тёплое дерево, живая зелень в керамике и свет, который весь день меняет угол, будто следит за вами. Каждая деталь выбрана так, чтобы не отвлекать, а помогать думать медленнее.</p>
+      <a href="#gallery" class="btn btn-outline">Смотреть интерьер</a>
+    </div>
+    <div class="about-figure reveal">
+      <svg class="art-arch" viewBox="0 0 500 620" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+        <rect width="500" height="620" fill="#F5EDE0"/>
+        <rect y="420" width="500" height="200" fill="#EFE1C9"/>
+        <path d="M40 420 V220 C40 140 100 90 175 90 C250 90 310 140 310 220 V420" fill="none" stroke="#0B5E4B" stroke-width="2" opacity="0.55"/>
+        <path d="M190 420 V260 C190 200 232 168 280 168 C328 168 370 200 370 260 V420" fill="none" stroke="#0B5E4B" stroke-width="2" opacity="0.35"/>
+        <circle cx="420" cy="120" r="46" fill="#FDFBF7" opacity="0.9"/>
+        <g opacity="0.5" stroke="#1E6B5A" stroke-width="2" fill="none">
+          <path d="M110 480 q20 -40 0 -80"/>
+          <path d="M130 480 q20 -55 0 -110"/>
+          <path d="M150 480 q20 -35 0 -70"/>
+        </g>
+        <rect x="70" y="330" width="90" height="90" rx="3" fill="#FDFBF7" opacity="0.85"/>
+        <rect x="230" y="300" width="70" height="120" rx="3" fill="#FDFBF7" opacity="0.7"/>
+      </svg>
+    </div>
+  </div>
+</section>
+ 
+<!-- ===================== MENU PREVIEW ===================== -->
+<section class="menu" id="menu">
+  <div class="container">
+    <div style="text-align:center; max-width:560px; margin:0 auto;" class="reveal">
+      <span class="section-label">Меню</span>
+      <h2 class="section-title">Зёрна, которые умеют молчать</h2>
+      <p style="color:var(--ink-soft); font-size:15.5px; line-height:1.7;">Небольшая карта напитков — каждый обжарен и сварен так, чтобы раскрыться не сразу, а постепенно.</p>
+    </div>
+ 
+    <div class="menu-grid">
+      <div class="menu-card reveal">
+        <div class="bean-icon-wrap">
+          <span class="steam"></span><span class="steam s2"></span><span class="steam s3"></span>
+          <svg class="bean-icon" viewBox="0 0 24 24" fill="none"><path d="M12 3C7 3 3 7.5 3 12.5C3 17 6.5 21 12 21C17.5 21 21 17 21 12.5C21 7.5 17 3 12 3Z" stroke="currentColor" stroke-width="1.3"/><path d="M12 3C9 8 9 17 12 21" stroke="currentColor" stroke-width="1.3"/></svg>
+        </div>
+        <h3>Эспрессо «Башня»</h3>
+        <p>Плотный, тёмный шоколад и лёгкая цитрусовая нота в послевкусии.</p>
+        <span class="menu-price">220 ₽</span>
+      </div>
+      <div class="menu-card reveal">
+        <div class="bean-icon-wrap">
+          <span class="steam"></span><span class="steam s2"></span><span class="steam s3"></span>
+          <svg class="bean-icon" viewBox="0 0 24 24" fill="none"><path d="M12 3C7 3 3 7.5 3 12.5C3 17 6.5 21 12 21C17.5 21 21 17 21 12.5C21 7.5 17 3 12 3Z" stroke="currentColor" stroke-width="1.3"/><path d="M12 3C9 8 9 17 12 21" stroke="currentColor" stroke-width="1.3"/></svg>
+        </div>
+        <h3>Капучино</h3>
+        <p>Бархатная молочная пена и мягкая ореховая глубина эспрессо.</p>
+        <span class="menu-price">280 ₽</span>
+      </div>
+      <div class="menu-card reveal">
+        <div class="bean-icon-wrap">
+          <span class="steam"></span><span class="steam s2"></span><span class="steam s3"></span>
+          <svg class="bean-icon" viewBox="0 0 24 24" fill="none"><path d="M12 3C7 3 3 7.5 3 12.5C3 17 6.5 21 12 21C17.5 21 21 17 21 12.5C21 7.5 17 3 12 3Z" stroke="currentColor" stroke-width="1.3"/><path d="M12 3C9 8 9 17 12 21" stroke="currentColor" stroke-width="1.3"/></svg>
+        </div>
+        <h3>Флэт уайт</h3>
+        <p>Двойной эспрессо и тонкий слой микропены — чисто и без лишнего.</p>
+        <span class="menu-price">300 ₽</span>
+      </div>
+      <div class="menu-card reveal">
+        <div class="bean-icon-wrap">
+          <span class="steam"></span><span class="steam s2"></span><span class="steam s3"></span>
+          <svg class="bean-icon" viewBox="0 0 24 24" fill="none"><path d="M12 3C7 3 3 7.5 3 12.5C3 17 6.5 21 12 21C17.5 21 21 17 21 12.5C21 7.5 17 3 12 3Z" stroke="currentColor" stroke-width="1.3"/><path d="M12 3C9 8 9 17 12 21" stroke="currentColor" stroke-width="1.3"/></svg>
+        </div>
+        <h3>Раф ванильный</h3>
+        <p>Сливочный, тёплый, с настоящим стручком ванили и щепоткой соли.</p>
+        <span class="menu-price">340 ₽</span>
+      </div>
+      <div class="menu-card reveal">
+        <div class="bean-icon-wrap">
+          <span class="steam"></span><span class="steam s2"></span><span class="steam s3"></span>
+          <svg class="bean-icon" viewBox="0 0 24 24" fill="none"><path d="M12 3C7 3 3 7.5 3 12.5C3 17 6.5 21 12 21C17.5 21 21 17 21 12.5C21 7.5 17 3 12 3Z" stroke="currentColor" stroke-width="1.3"/><path d="M12 3C9 8 9 17 12 21" stroke="currentColor" stroke-width="1.3"/></svg>
+        </div>
+        <h3>Фильтр-кофе</h3>
+        <p>Сезонное зерно через V60 — прозрачный вкус, ягодная кислинка.</p>
+        <span class="menu-price">260 ₽</span>
+      </div>
+      <div class="menu-card reveal">
+        <div class="bean-icon-wrap">
+          <span class="steam"></span><span class="steam s2"></span><span class="steam s3"></span>
+          <svg class="bean-icon" viewBox="0 0 24 24" fill="none"><path d="M12 3C7 3 3 7.5 3 12.5C3 17 6.5 21 12 21C17.5 21 21 17 21 12.5C21 7.5 17 3 12 3Z" stroke="currentColor" stroke-width="1.3"/><path d="M12 3C9 8 9 17 12 21" stroke="currentColor" stroke-width="1.3"/></svg>
+        </div>
+        <h3>Матча латте</h3>
+        <p>Церемониальная матча, взбитая вручную, на выбор молоко без лактозы.</p>
+        <span class="menu-price">320 ₽</span>
+      </div>
+    </div>
+ 
+    <div class="menu-cta reveal">
+      <a href="#contacts" class="btn btn-primary">Смотреть полное меню</a>
+    </div>
+  </div>
+</section>
+ 
+<!-- ===================== GALLERY ===================== -->
+<section class="gallery" id="gallery">
+  <div class="container">
+    <div style="text-align:center; max-width:560px; margin:0 auto;" class="reveal">
+      <span class="section-label">Интерьер</span>
+      <h2 class="section-title">Свет, камень и зелень</h2>
+    </div>
+    <div class="gallery-grid reveal" id="galleryGrid"></div>
+  </div>
+</section>
+ 
+<!-- ===================== REVIEWS ===================== -->
+<section class="reviews" id="reviews">
+  <div class="container">
+    <div class="reviews-head reveal">
+      <span class="section-label">Отзывы</span>
+      <h2 class="section-title">Что говорят гости</h2>
+    </div>
+ 
+    <div class="slider reveal">
+      <div class="slide active">
+        <span class="quote-mark">"</span>
+        <div class="stars"><span style="animation-delay:0s">★</span><span style="animation-delay:.15s">★</span><span style="animation-delay:.3s">★</span><span style="animation-delay:.45s">★</span><span style="animation-delay:.6s">★</span></div>
+        <p>Захожу сюда работать по утрам — тут единственное место в районе, где действительно тихо, а не просто негромко.</p>
+        <div class="slide-author">— Анна, дизайнер</div>
+      </div>
+      <div class="slide">
+        <span class="quote-mark">"</span>
+        <div class="stars"><span style="animation-delay:0s">★</span><span style="animation-delay:.15s">★</span><span style="animation-delay:.3s">★</span><span style="animation-delay:.45s">★</span><span style="animation-delay:.6s">★</span></div>
+        <p>Флэт уайт лучший в городе, но больше всего люблю просто сидеть у окна и смотреть, как меняется свет.</p>
+        <div class="slide-author">— Дмитрий, архитектор</div>
+      </div>
+      <div class="slide">
+        <span class="quote-mark">"</span>
+        <div class="stars"><span style="animation-delay:0s">★</span><span style="animation-delay:.15s">★</span><span style="animation-delay:.3s">★</span><span style="animation-delay:.45s">★</span><span style="animation-delay:.6s">★</span></div>
+        <p>Интерьер как из другого века, а сервис — из этого: быстро, тепло, без суеты.</p>
+        <div class="slide-author">— Мария, гость города</div>
+      </div>
+      <div class="slider-dots">
+        <button class="active" onclick="goToSlide(0)"></button>
+        <button onclick="goToSlide(1)"></button>
+        <button onclick="goToSlide(2)"></button>
+      </div>
+    </div>
+  </div>
+</section>
+ 
+<!-- ===================== FOOTER ===================== -->
+<footer id="contacts">
+  <svg class="footer-tower-decor" viewBox="0 0 200 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M40 300V90L70 20L100 90V300" stroke="white" stroke-width="2"/>
+    <path d="M100 300V130L130 70L160 130V300" stroke="white" stroke-width="2"/>
+  </svg>
+ 
+  <div class="footer-top">
+    <div class="container">
+      <div>
+        <h3>Не пропустите новый сезон обжарки</h3>
+        <p>Раз в месяц — письмо о новом зерне и событиях кофейни</p>
+      </div>
+      <form class="subscribe-form" id="footerSubscribeForm">
+        <input type="email" id="footerEmailInput" placeholder="Ваш email" required>
+        <button type="submit">Подписаться</button>
+      </form>
+    </div>
+  </div>
+ 
+  <div class="footer-main">
+    <div class="container footer-grid">
+      <div>
+        <div class="footer-logo">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="22" height="22">
+            <path d="M9 21V9L12 3L15 9V21" stroke="white" stroke-width="1.3" stroke-linejoin="round"/>
+            <path d="M6 21V13L4 10" stroke="white" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M18 21V13L20 10" stroke="white" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+            <line x1="4" y1="21" x2="20" y2="21" stroke="white" stroke-width="1.3" stroke-linecap="round"/>
+          </svg>
+          Шёпот башен
+        </div>
+        <p>Авторская кофейня в самом сердце старого города. Кофе, тишина и время, которое никуда не бежит.</p>
+        <div class="socials">
+          <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.4"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a>
+          <a href="#" aria-label="Telegram"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.4"><path d="M21 4L2 11.5L9 13.5M21 4L18 20L9 13.5M21 4L9 13.5"/></svg></a>
+          <a href="#" aria-label="VK"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.4"><circle cx="12" cy="12" r="9"/><path d="M8 9c0.5 3 2 6 4 6s0-3 0-6M16 9c-0.5 3 -2 6 -4 6"/></svg></a>
+        </div>
+      </div>
+ 
+      <div class="footer-col">
+        <h4>Адрес</h4>
+        <p>ул. Крепостная, 12<br>Старый город</p>
+      </div>
+ 
+      <div class="footer-col">
+        <h4>Часы работы</h4>
+        <p>Пн–Пт: 8:00–21:00<br>Сб–Вс: 9:00–22:00</p>
+      </div>
+ 
+      <div class="footer-col">
+        <h4>Навигация</h4>
+        <a href="#menu">Меню</a>
+        <a href="#about">Атмосфера</a>
+        <a href="#gallery">Галерея</a>
+        <a href="#reviews">Отзывы</a>
+      </div>
+    </div>
+  </div>
+ 
+  <div class="footer-bottom">
+    © 2026 «Шёпот башен». Все права защищены.* Данный сайт является демонстрационным проектом из портфолио.
+  </div>
+</footer>
+ 
+<!-- ===================== SUBSCRIBE MODAL ===================== -->
+<div class="modal-overlay" id="subscribeModal" aria-hidden="true">
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+ 
+    <svg class="tower-mark" style="position:absolute;" viewBox="0 0 160 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M20 220V70L45 15L70 70V220" stroke="#0B5E4B" stroke-width="2"/>
+      <path d="M70 220V95L95 45L120 95V220" stroke="#0B5E4B" stroke-width="2"/>
+    </svg>
+ 
+    <button class="modal-close" id="modalCloseBtn" aria-label="Закрыть">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+        <line x1="4" y1="4" x2="20" y2="20"/><line x1="20" y1="4" x2="4" y2="20"/>
+      </svg>
+    </button>
+ 
+    <!-- Step 1: entry form -->
+    <div class="modal-step modal-entry">
+      <div class="modal-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="5" width="18" height="14" rx="2"/>
+          <path d="M3 7l9 6l9 -6"/>
+        </svg>
+      </div>
+      <h3 id="modalTitle">Присоединяйтесь к «Шёпоту»</h3>
+      <p class="modal-sub">Раз в месяц — письмо о новом зерне, тихих вечерах и событиях кофейни. Ничего лишнего.</p>
+ 
+      <form id="modalForm">
+        <div class="modal-field" id="modalFieldWrap">
+          <label for="modalEmailInput">Электронная почта</label>
+          <input type="email" id="modalEmailInput" placeholder="you@example.com" autocomplete="email" required>
+          <span class="field-error">Проверьте формат адреса — например, name@mail.com</span>
+        </div>
+        <button type="submit" class="btn btn-primary">Подписаться</button>
+      </form>
+ 
+      <div class="modal-divider-line">Без спама</div>
+    </div>
+ 
+    <!-- Step 2: success -->
+    <div class="modal-step modal-success" id="modalSuccess">
+      <div class="modal-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 13l4 4L19 7"/>
+        </svg>
+      </div>
+      <h3>Готово, вы с нами</h3>
+      <p class="modal-sub">Письмо-подтверждение отправлено на <span class="modal-email" id="modalEmailDisplay"></span>. До встречи в «Шёпоте башен».</p>
+      <button type="button" class="btn btn-outline" id="modalDoneBtn">Закрыть</button>
+    </div>
+ 
+  </div>
+</div>
+ 
+<script>
+  // Header scroll state + progress bar + gentle towers parallax
+  const header = document.getElementById('siteHeader');
+  const scrollProgress = document.getElementById('scrollProgress');
+  const heroSection = document.querySelector('.hero');
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+ 
+  function onScroll(){
+    const scrollTop = window.scrollY;
+    header.classList.toggle('scrolled', scrollTop > 20);
+ 
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    scrollProgress.style.width = pct + '%';
+ 
+    if(!prefersReducedMotion && heroSection){
+      const heroHeight = heroSection.offsetHeight;
+      if(scrollTop < heroHeight){
+        heroTowers.style.transform = `translateY(${scrollTop * 0.22}px)`;
+        heroTowers.style.opacity = String(Math.max(0.05 - scrollTop / heroHeight * 0.05, 0));
+      }
+    }
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+ 
+  // Reveal on scroll, with a gentle stagger for grid siblings
+  const revealEls = document.querySelectorAll('.reveal:not(.in)');
+  const staggerGroups = [document.querySelector('.menu-grid'), document.querySelector('.gallery-grid')];
+ 
+  function staggerIndexFor(el){
+    for(const group of staggerGroups){
+      if(group && group.contains(el)){
+        return Array.from(group.children).indexOf(el);
+      }
+    }
+    return -1;
+  }
+ 
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if(e.isIntersecting){
+        const idx = staggerIndexFor(e.target);
+        const delay = idx >= 0 ? idx * 90 : 0;
+        setTimeout(() => e.target.classList.add('in'), delay);
+        io.unobserve(e.target);
+      }
+    });
+  }, {threshold:0.15});
+  revealEls.forEach(el => io.observe(el));
+ 
+  // Hero tower silhouettes (signature element)
+  const heroTowers = document.getElementById('heroTowers');
+  const towerCount = 7;
+  let towerSVG = `<svg width="100%" height="70%" viewBox="0 0 1200 420" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" style="position:absolute; bottom:0; left:0;">`;
+  const heights = [180,260,150,320,190,240,160];
+  let x = -40;
+  heights.forEach((h,i) => {
+    const w = 90 + (i%3)*20;
+    const y = 420 - h;
+    towerSVG += `<g opacity="${0.5 - i*0.02}">
+      <rect x="${x}" y="${y+40}" width="${w}" height="${h-40}" fill="#0B5E4B" opacity="0.9"/>
+      <path d="M${x} ${y+40} L${x+w/2} ${y} L${x+w} ${y+40} Z" fill="#0B5E4B" opacity="0.9"/>
+    </g>`;
+    x += w + 34;
+  });
+  towerSVG += `</svg>`;
+  heroTowers.innerHTML = towerSVG;
+  heroTowers.style.opacity = '0.05';
+ 
+  // Gallery placeholders (interior-style abstract tiles)
+  const galleryGrid = document.getElementById('galleryGrid');
+  const palettes = [
+    ['#EFE1C9','#0B5E4B'], ['#F5EDE0','#1E6B5A'], ['#FDFBF7','#0B5E4B'],
+    ['#EFE1C9','#1E6B5A'], ['#F5EDE0','#0B5E4B'], ['#FDFBF7','#1E6B5A']
+  ];
+  palettes.forEach((p, i) => {
+    const fig = document.createElement('figure');
+    fig.innerHTML = `<svg viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice" width="100%" height="100%">
+      <rect width="400" height="400" fill="${p[0]}"/>
+      <path d="M${60+i*10} 400V${180-i*8} C${60+i*10} ${120-i*4} ${120+i*6} ${90-i*4} ${170+i*4} ${90-i*4} C${220+i*4} ${90-i*4} ${270+i*4} ${120-i*4} ${270+i*4} ${180-i*8} V400"
+        fill="none" stroke="${p[1]}" stroke-width="2.4" opacity="0.55"/>
+      <circle cx="${320-i*12}" cy="${70+i*10}" r="${26+i*3}" fill="${p[1]}" opacity="0.12"/>
+    </svg>`;
+    galleryGrid.appendChild(fig);
+  });
+ 
+  // ---------- Subscribe modal ----------
+  const overlay = document.getElementById('subscribeModal');
+  const footerForm = document.getElementById('footerSubscribeForm');
+  const footerInput = document.getElementById('footerEmailInput');
+  const modalForm = document.getElementById('modalForm');
+  const modalEmailInput = document.getElementById('modalEmailInput');
+  const modalFieldWrap = document.getElementById('modalFieldWrap');
+  const modalEntry = document.querySelector('.modal-entry');
+  const modalSuccess = document.getElementById('modalSuccess');
+  const modalEmailDisplay = document.getElementById('modalEmailDisplay');
+  const closeBtn = document.getElementById('modalCloseBtn');
+  const doneBtn = document.getElementById('modalDoneBtn');
+  let lastFocused = null;
+ 
+  function openModal(prefillEmail){
+    lastFocused = document.activeElement;
+    modalEntry.style.display = 'block';
+    modalSuccess.classList.remove('show');
+    modalFieldWrap.classList.remove('invalid');
+    modalEmailInput.value = prefillEmail || '';
+    overlay.classList.add('open');
+    overlay.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => modalEmailInput.focus(), 350);
+  }
+ 
+  function closeModal(){
+    overlay.classList.remove('open');
+    overlay.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    if(lastFocused) lastFocused.focus();
+  }
+ 
+  // Open from footer form
+  footerForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    openModal(footerInput.value);
+    footerInput.value = '';
+  });
+ 
+  // Close interactions
+  closeBtn.addEventListener('click', closeModal);
+  doneBtn.addEventListener('click', closeModal);
+  overlay.addEventListener('click', (e) => { if(e.target === overlay) closeModal(); });
+  document.addEventListener('keydown', (e) => { if(e.key === 'Escape' && overlay.classList.contains('open')) closeModal(); });
+ 
+  // Modal form -> validate -> show success
+  modalForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const value = modalEmailInput.value.trim();
+    const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+    if(!valid){
+      modalFieldWrap.classList.add('invalid');
+      modalEmailInput.focus();
+      return;
+    }
+    modalFieldWrap.classList.remove('invalid');
+    modalEmailDisplay.textContent = value;
+    modalEntry.style.display = 'none';
+    modalSuccess.classList.add('show');
+  });
+ 
+  modalEmailInput.addEventListener('input', () => modalFieldWrap.classList.remove('invalid'));
+ 
+  // Reviews slider
+  const slides = document.querySelectorAll('.slide');
+  const dots = document.querySelectorAll('.slider-dots button');
+  let current = 0;
+  function goToSlide(i){
+    slides[current].classList.remove('active');
+    dots[current].classList.remove('active');
+    current = i;
+    slides[current].classList.add('active');
+    dots[current].classList.add('active');
+  }
+  setInterval(() => { goToSlide((current+1) % slides.length); }, 5500);
+</script>
+ 
+</body>
+</html>
